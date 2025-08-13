@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MindAR Compiler</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>MindAR Image Compiler</h1>
+        <input type="file" id="imageInput" accept="image/*">
+        <div id="status">Select an image to compile...</div>
+        <div id="downloadArea"></div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        // Your implementation here
+        document.getElementById('imageInput').addEventListener('change', async (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const compiler = new MindARCompiler();
+                compiler.setCallbacks(
+                    (msg) => document.getElementById('status').textContent = msg,
+                    (mindFile) => {
+                        document.getElementById('status').textContent = 'Success!';
+                        const link = compiler.createDownloadLink();
+                        document.getElementById('downloadArea').appendChild(link);
+                    },
+                    (err) => document.getElementById('status').textContent = 'Error: ' + err
+                );
+                await compiler.compileImage(file);
+            }
+        });
+    </script>
+</body>
+</html>
